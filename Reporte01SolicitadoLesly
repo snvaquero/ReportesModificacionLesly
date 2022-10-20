@@ -80,14 +80,14 @@ END
 , T1.[Quantity]
 
 , T1.[Price] ---Muestra Precio que este reflejado en Detalle de Factura puede ser cordobas o dolares--
---,T1.[U_PreciosL]
+--,T1.[U_PreciosL]--U_PreciosL se utiliza para traer el precio cuando hay articulos en un kit precio de los hijos--
 /*,PrecioCordobas=case
 		when T1.Currency = 'USD' THEN
 		T1.LineTotal/T1.Quantity
 
 		else
 		T1.Price
-		end*/
+		end*/--Precio cordobas estan completos todos los precios, exceptos no aparecen los U_PreciosL que son los precios de los hijos de un kit---
 
 --, (T1.[PriceBefDi] - T1.[Price] ) as 'Descuento'
 --, T1.[Currency]
