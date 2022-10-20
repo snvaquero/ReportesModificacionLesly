@@ -49,7 +49,8 @@ when T11.ItmsGrpCod = '122' then 'VALVULAS'
 when T11.ItmsGrpCod = '124' then 'COMPONENTES P BANDAS'
 when T11.ItmsGrpCod = '125' then 'ESPECIALES'
 END
-,T1.StockPrice,T1.WhsCode,
+--,T1.StockPrice
+,T1.WhsCode,
  T0.[CardCode]
  ,Vendedor=case
  when t0.SlpCode = -1 then	'-Ningún empleado del departamento de ventas-'
@@ -75,21 +76,21 @@ END
 , T0.[DocNum]
 , T1.[ItemCode]
 , T1.[Dscription]
-, T1.[DiscPrcnt]
+--, T1.[DiscPrcnt]
 , T1.[Quantity]
 
 , T1.[Price]
-,T1.[U_PreciosL]
-,PrecioCordobas=case
+--,T1.[U_PreciosL]
+/*,PrecioCordobas=case
 		when T1.Currency = 'USD' THEN
 		T1.LineTotal/T1.Quantity
 
 		else
 		T1.Price
-		end
+		end*/
 
-, (T1.[PriceBefDi] - T1.[Price] ) as 'Descuento'
-, T1.[Currency]
+--, (T1.[PriceBefDi] - T1.[Price] ) as 'Descuento'
+--, T1.[Currency]
 , T1.[LineTotal]
 ,(SELECT T6.Total FROM ITR1 T5 INNER JOIN OITR T6 ON T5.ReconNum=T6.ReconNum
 WHERE T5.SrcObjTyp =13 AND T5.SrcObjAbs =T0.DocEntry AND T6.InitObjTyp =14 AND T6.ReconDate >=T0.DocDate) NC
@@ -205,4 +206,3 @@ ON T0.[SlpCode] = T22.[SlpCode]
 'KS120-1',
 'RSRTNIVEL'
 )
---
