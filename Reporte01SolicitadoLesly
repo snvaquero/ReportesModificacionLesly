@@ -79,7 +79,7 @@ END
 --, T1.[DiscPrcnt]
 , T1.[Quantity]
 
-, T1.[Price]
+, T1.[Price] ---Muestra Precio que este reflejado en Detalle de Factura puede ser cordobas o dolares--
 --,T1.[U_PreciosL]
 /*,PrecioCordobas=case
 		when T1.Currency = 'USD' THEN
@@ -91,7 +91,7 @@ END
 
 --, (T1.[PriceBefDi] - T1.[Price] ) as 'Descuento'
 --, T1.[Currency]
-, T1.[LineTotal]
+, T1.[LineTotal]----Siempre muestra total en Cordobas---
 ,(SELECT T6.Total FROM ITR1 T5 INNER JOIN OITR T6 ON T5.ReconNum=T6.ReconNum
 WHERE T5.SrcObjTyp =13 AND T5.SrcObjAbs =T0.DocEntry AND T6.InitObjTyp =14 AND T6.ReconDate >=T0.DocDate) NC
 --,(SELECT  from INV1 T20  INNER JOIN OITM T11 ON T20.[ItemCode] = T11.[ItemCode] and t20.WhsCode = '01') OnStock
