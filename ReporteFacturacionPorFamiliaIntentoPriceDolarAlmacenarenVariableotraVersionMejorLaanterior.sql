@@ -1,11 +1,50 @@
+ -- drop proc pa_autor_sumaypromedio4;
+create procedure pa_autor_sumaypromedio4
+ @StartDate  Date ='',
+  @promedio decimal(6,2) output
+    as 
+   select  PrecioCordobas=case
+		when T1.Currency = 'USD' THEN 
+		T1.LineTotal/nullif(T1.Quantity,0)
+		
+		when T1.Price = 0 then T1.[U_PreciosL] 
+		else
+		T1.Price
+		end from INV1 T1 where T1.[DocDate]  = @StartDate
+  declare  @p decimal(6,2)
+ execute pa_autor_sumaypromedio4 '10-24-2022', @p output 
+ select  @p + 1 as promedio ;
+
+SET ARITHABORT OFF 
+SET ANSI_WARNINGS OFF
+declare @StartDate  Date;
+set @StartDate ='10-18-2022'
+Declare @Todate as numeric
+set @Todate = ( select distinct PrecioCordobas=case
+		when T1.Currency = 'USD' THEN 
+		T1.LineTotal/nullif(T1.Quantity,0)
+		
+		when T1.Price = 0 then T1.[U_PreciosL] 
+		else
+		T1.Price
+		end from INV1 T1)
 declare @StartDate  Date,@EndDate  Date;
-set @StartDate ='10-01-2022'
+set @StartDate ='10-18-2022'
 set @EndDate ='10-18-2022' /*el 20 mayo 2021* hay que buscar por que no lo genera*/
-
+/*Declare @_Today nvarchar(50)
+set @_Today = ''
+ Select @_Today =  case
+		when T1.Currency = 'USD' THEN 
+		T1.LineTotal/T1.Quantity
+		
+		when T1.Price = 0 then T1.[U_PreciosL] 
+		else
+		T1.Price
+		end FROM INV1 T1 */
 SELECT 
-
-
-T11.OnHand
+nullif(@Todate,0)
+,T0.SysRate
+,T11.OnHand
 ,Familia = Case 
 when T11.U_u_familiaa = '100' then 'ADAPTADORES'
 when T11.U_u_familiaa = '1000' then 'INSTRUMENTOS DE MEDICION'
@@ -76,7 +115,7 @@ END
 --, T1.[DiscPrcnt]
 , T1.[Quantity]
 
-, T1.[Price] ---Muestra Precio que este reflejado en Detalle de Factura puede ser cordobas o dolares--
+--, T1.[Price] ---Muestra Precio que este reflejado en Detalle de Factura puede ser cordobas o dolares--
 ---, T1.[PriceBefDi]
 --,T1.[U_PreciosL]
 /*,PrecioCordobas=case
@@ -101,10 +140,11 @@ END
    (Select T.[Price] from ITM1 T where T.ItemCode=T1.Itemcode and T.PriceList=11)
   END 
  ,T1.[LineTotal]----Siempre muestra total en Cordobas---
-,(SELECT T6.Total FROM ITR1 T5 INNER JOIN OITR T6 ON T5.ReconNum=T6.ReconNum 
-WHERE T5.SrcObjTyp =13 AND T5.SrcObjAbs =T0.DocEntry AND T6.InitObjTyp =14 AND T6.ReconDate >=T0.DocDate) NC
+--,(SELECT T6.Total FROM ITR1 T5 INNER JOIN OITR T6 ON T5.ReconNum=T6.ReconNum 
+--WHERE T5.SrcObjTyp =13 AND T5.SrcObjAbs =T0.DocEntry AND T6.InitObjTyp =14 AND T6.ReconDate >=T0.DocDate) NC
 --,(SELECT  from INV1 T20  INNER JOIN OITM T11 ON T20.[ItemCode] = T11.[ItemCode] and t20.WhsCode = '01') OnStock
- ,T0.[DocDate] FROM OINV T0  inner JOIN INV1 T1
+ ,T0.[DocDate]
+  FROM OINV T0  inner JOIN INV1 T1
  ON T0.[DocEntry] = T1.[DocEntry] INNER JOIN OITM T11 
  ON T1.[ItemCode] = T11.[ItemCode] INNER JOIN OSLP T22 
 ON T0.[SlpCode] = T22.[SlpCode]
@@ -214,4 +254,4 @@ ON T0.[SlpCode] = T22.[SlpCode]
 'KS120',
 'KS120-1',
 'RSRTNIVEL'
-)
+)  and  (T0.CEECFlag not in ('Y') OR  T0.DocStatus not in ('C') OR  T0.InvntSttus not in ('C'))

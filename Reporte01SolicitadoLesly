@@ -206,3 +206,12 @@ ON T0.[SlpCode] = T22.[SlpCode]
 'KS120-1',
 'RSRTNIVEL'
 )
+
+
+/*Codigo final, faltaria solo la mejora de convertir el price y linetotal a dolares
+
+
+
+
+
+*/

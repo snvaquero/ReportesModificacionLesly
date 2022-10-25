@@ -1,11 +1,10 @@
 declare @StartDate  Date,@EndDate  Date;
-set @StartDate ='10-01-2022'
+set @StartDate ='10-18-2022'
 set @EndDate ='10-18-2022' /*el 20 mayo 2021* hay que buscar por que no lo genera*/
 
 SELECT 
-
-
-T11.OnHand
+T0.SysRate
+,T11.OnHand
 ,Familia = Case 
 when T11.U_u_familiaa = '100' then 'ADAPTADORES'
 when T11.U_u_familiaa = '1000' then 'INSTRUMENTOS DE MEDICION'
@@ -101,8 +100,8 @@ END
    (Select T.[Price] from ITM1 T where T.ItemCode=T1.Itemcode and T.PriceList=11)
   END 
  ,T1.[LineTotal]----Siempre muestra total en Cordobas---
-,(SELECT T6.Total FROM ITR1 T5 INNER JOIN OITR T6 ON T5.ReconNum=T6.ReconNum 
-WHERE T5.SrcObjTyp =13 AND T5.SrcObjAbs =T0.DocEntry AND T6.InitObjTyp =14 AND T6.ReconDate >=T0.DocDate) NC
+--,(SELECT T6.Total FROM ITR1 T5 INNER JOIN OITR T6 ON T5.ReconNum=T6.ReconNum 
+--WHERE T5.SrcObjTyp =13 AND T5.SrcObjAbs =T0.DocEntry AND T6.InitObjTyp =14 AND T6.ReconDate >=T0.DocDate) NC
 --,(SELECT  from INV1 T20  INNER JOIN OITM T11 ON T20.[ItemCode] = T11.[ItemCode] and t20.WhsCode = '01') OnStock
  ,T0.[DocDate] FROM OINV T0  inner JOIN INV1 T1
  ON T0.[DocEntry] = T1.[DocEntry] INNER JOIN OITM T11 
@@ -214,4 +213,4 @@ ON T0.[SlpCode] = T22.[SlpCode]
 'KS120',
 'KS120-1',
 'RSRTNIVEL'
-)
+)  and  (T0.CEECFlag not in ('Y') OR  T0.DocStatus not in ('C') OR  T0.InvntSttus not in ('C'))
